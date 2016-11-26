@@ -90,6 +90,8 @@ public class TodoBusinessImplMockitoTest {
         verify(todoServiceMock, atLeastOnce()).deleteTodo("Learn to Dance");
         verify(todoServiceMock, never()).deleteTodo("Learn Spring MVC");
         // atLeastOnce, atLeast
+
+        assertThat(result, is(true));
     }
 
     @Test
