@@ -3,10 +3,7 @@ package com.in28minutes.business;
 import com.in28minutes.data.api.TodoService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
@@ -22,6 +19,9 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class TodoBusinessImplMockitoTest {
 
+    private static final String USER = "Prajesh";
+
+
     @Mock
     TodoService todoServiceMock;
     // TodoService todoServiceMock = mock(TodoService.class)
@@ -29,6 +29,10 @@ public class TodoBusinessImplMockitoTest {
     @InjectMocks
     TodoBusinessImpl todoBusinessImpl;
     // TodoBusinessImpl todoBusinessImpl = new TodoBusinessImpl(todoServiceMock)
+
+    @Captor
+    ArgumentCaptor<String> stringArgumentCaptor;
+    // ArgumentCaptor stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
 
     @Test
     public void usingMockito() {
@@ -38,10 +42,10 @@ public class TodoBusinessImplMockitoTest {
                 "Learn Spring", "Learn to Dance");
 
         // Mock the expected return type
-        when(todoServiceMock.retrieveTodos("Ranga")).thenReturn(allTodos);
+        when(todoServiceMock.retrieveTodos(USER)).thenReturn(allTodos);
 
         List<String> todos = todoBusinessImpl
-                .retrieveTodosRelatedToSpring("Ranga");
+                .retrieveTodosRelatedToSpring(USER);
         assertEquals(2, todos.size());
     }
 
@@ -52,11 +56,11 @@ public class TodoBusinessImplMockitoTest {
                 "Learn Spring", "Learn to Dance");
 
         //given
-        given(todoServiceMock.retrieveTodos("Ranga")).willReturn(allTodos);
+        given(todoServiceMock.retrieveTodos(USER)).willReturn(allTodos);
 
         //when
         List<String> todos = todoBusinessImpl
-                .retrieveTodosRelatedToSpring("Ranga");
+                .retrieveTodosRelatedToSpring(USER);
 
         //then
         assertThat(todos.size(), is(2));
@@ -65,23 +69,19 @@ public class TodoBusinessImplMockitoTest {
     @Test
     public void test_argument_passed_on_deletetodo_method() {
 
-        // Declare argument captor with argument type to capture
-        ArgumentCaptor stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
-
         // [given]
-        String userName = "prajesh";
 
         // Mock the values
         List<String> todoListItems = Arrays.asList("Learn Spring MVC",
                 "Learn Spring", "Learn to Dance");
 
-        given(todoServiceMock.retrieveTodos(userName)).willReturn(todoListItems);
+        given(todoServiceMock.retrieveTodos(USER)).willReturn(todoListItems);
 
         // [when]
-        boolean result = todoBusinessImpl.deleteTodosNotRelatedToSpring(userName);
+        boolean result = todoBusinessImpl.deleteTodosNotRelatedToSpring(USER);
 
         // [then]
-        then(todoServiceMock).should().deleteTodo((String) stringArgumentCaptor.capture());
+        then(todoServiceMock).should().deleteTodo(stringArgumentCaptor.capture());
         assertThat(stringArgumentCaptor.getValue(), is("Learn to Dance"));
 
         verify(todoServiceMock, atLeastOnce()).deleteTodo("Learn to Dance");
@@ -97,9 +97,9 @@ public class TodoBusinessImplMockitoTest {
         List<String> allTodos = Arrays.asList("Learn Spring MVC",
                 "Learn Spring", "Learn to Dance");
 
-        when(todoServiceMock.retrieveTodos("Ranga")).thenReturn(allTodos);
+        when(todoServiceMock.retrieveTodos(USER)).thenReturn(allTodos);
 
-        todoBusinessImpl.deleteTodosNotRelatedToSpring("Ranga");
+        todoBusinessImpl.deleteTodosNotRelatedToSpring(USER);
 
         // Ensure the method with this argument is called
         verify(todoServiceMock).deleteTodo("Learn to Dance");

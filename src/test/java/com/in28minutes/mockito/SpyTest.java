@@ -1,42 +1,42 @@
 package com.in28minutes.mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.stub;
-import static org.mockito.Mockito.verify;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class SpyTest {
 
-	@Test
-	public void creatingASpyOnArrayList() {
-		List<String> listSpy = spy(ArrayList.class);
-		listSpy.add("Ranga");
-		listSpy.add("in28Minutes");
+    @Test
+    public void creatingASpyOnArrayList() {
+        List<String> listSpy = spy(ArrayList.class);
 
-		verify(listSpy).add("Ranga");
-		verify(listSpy).add("in28Minutes");
+        // Not able to perform this operations with a mock
+        listSpy.add("Ranga");
+        listSpy.add("in28Minutes");
 
-		assertEquals(2, listSpy.size());
-		assertEquals("Ranga", listSpy.get(0));
-	}
+        verify(listSpy).add("Ranga");
+        verify(listSpy).add("in28Minutes");
 
-	@Test
-	public void creatingASpyOnArrayList_overridingSpecificMethods() {
-		List<String> listSpy = spy(ArrayList.class);
-		listSpy.add("Ranga");
-		listSpy.add("in28Minutes");
+        assertEquals(2, listSpy.size());
+        assertEquals("Ranga", listSpy.get(0));
+    }
 
-		stub(listSpy.size()).toReturn(-1);
+    @Test
+    public void creatingASpyOnArrayList_overridingSpecificMethods() {
+        List<String> listSpy = spy(ArrayList.class);
+        listSpy.add("Ranga");
+        listSpy.add("in28Minutes");
 
-		assertEquals(-1, listSpy.size());
-		assertEquals("Ranga", listSpy.get(0));
+        stub(listSpy.size()).toReturn(-1);
 
-		// @Spy Annotation
-	}
+        assertEquals(-1, listSpy.size());
+        assertEquals("Ranga", listSpy.get(0));
+
+        // @Spy Annotation
+    }
 
 }
