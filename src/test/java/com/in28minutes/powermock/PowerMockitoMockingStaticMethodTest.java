@@ -17,6 +17,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({UtilityClass.class})
@@ -43,15 +44,19 @@ public class PowerMockitoMockingStaticMethodTest {
 
         when(dependencyMock.retrieveAllStats()).thenReturn(stats);
 
-        // Init a static class in the class
+        // Init a static class in the test case
         mockStatic(UtilityClass.class);
 
-        // Mock this method return value
+        // Mock this method return value with stated argument
         when(UtilityClass.staticMethod(6)).thenReturn(6);
 
         int result = systemUnderTest.methodCallingAStaticMethod();
 
         assertThat(result, is(6));
+
+        // To verify if staticMethod was called with the correct argument
+        verifyStatic();
+        UtilityClass.staticMethod(6);
     }
 
     @Test
