@@ -23,10 +23,11 @@ public class PowerMockitoTestingPrivateMethodTest {
 
 	@Test
 	public void powerMockito_CallingAPrivateMethod() throws Exception {
-		when(dependencyMock.retrieveAllStats()).thenReturn(
-				Arrays.asList(1, 2, 3));
-		long value = (Long) Whitebox.invokeMethod(systemUnderTest,
-				"privateMethodUnderTest");
+		when(dependencyMock.retrieveAllStats()).thenReturn(Arrays.asList(1, 2, 3));
+
+		// Invoke a private method from test class using Whitebox
+		long value = (Long) Whitebox.invokeMethod(systemUnderTest,"privateMethodUnderTest");
+
 		assertEquals(6, value);
 	}
 }
