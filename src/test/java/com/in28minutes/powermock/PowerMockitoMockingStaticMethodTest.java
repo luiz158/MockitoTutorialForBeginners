@@ -47,11 +47,11 @@ public class PowerMockitoMockingStaticMethodTest {
         mockStatic(UtilityClass.class);
 
         // Mock this method return value
-        when(UtilityClass.staticMethod(6)).thenReturn(100);
+        when(UtilityClass.staticMethod(6)).thenReturn(6);
 
         int result = systemUnderTest.methodCallingAStaticMethod();
 
-        assertThat(result, is(100));
+        assertThat(result, is(6));
     }
 
     @Test
