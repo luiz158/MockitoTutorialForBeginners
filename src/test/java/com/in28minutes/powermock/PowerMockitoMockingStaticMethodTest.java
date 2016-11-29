@@ -1,11 +1,5 @@
 package com.in28minutes.powermock;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,36 +8,72 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ UtilityClass.class /*The class with static method to be mocked*/})
+@PrepareForTest({UtilityClass.class})
+//The class with static method to be mocked
 public class PowerMockitoMockingStaticMethodTest {
 
-	@Mock
-	Dependency dependencyMock;
+	/*
+        Mock static setup eg. @RunWith(PowerMockRunner.class)
+		1) Specific Runner
+		2) Initialize UtilityClass.class for mocking
+		3) PrepareForTest to specify static class
+		4) Mock
+	 */
 
-	@InjectMocks
-	SystemUnderTest systemUnderTest;
+    @Mock
+    Dependency dependencyMock;
 
-	@Test
-	public void powerMockito_MockingAStaticMethodCall() {
+    @InjectMocks
+    SystemUnderTest systemUnderTest;
 
-		when(dependencyMock.retrieveAllStats()).thenReturn(
-				Arrays.asList(1, 2, 3));
+    @Test
+    public void testRetriveTodosRelatedToSpring_Mock() {
+        List<Integer> stats = Arrays.asList(1, 2, 3);
 
-		PowerMockito.mockStatic(UtilityClass.class);
+        when(dependencyMock.retrieveAllStats()).thenReturn(stats);
 
-		when(UtilityClass.staticMethod(anyLong())).thenReturn(150);
+        // Init a static class in the class
+        mockStatic(UtilityClass.class);
 
-		assertEquals(150, systemUnderTest.methodCallingAStaticMethod());
+        // Mock this method return value
+        when(UtilityClass.staticMethod(6)).thenReturn(100);
 
-		//To verify a specific method call
-		//First : Call PowerMockito.verifyStatic() 
-		//Second : Call the method to be verified
-		PowerMockito.verifyStatic();
-		UtilityClass.staticMethod(1 + 2 + 3);
+        int result = systemUnderTest.methodCallingAStaticMethod();
 
-		// verify exact number of calls
-		//PowerMockito.verifyStatic(Mockito.times(1));
+        assertThat(result, is(100));
+    }
 
-	}
+    @Test
+    public void powerMockito_MockingAStaticMethodCall() {
+
+        when(dependencyMock.retrieveAllStats()).thenReturn(
+                Arrays.asList(1, 2, 3));
+
+        PowerMockito.mockStatic(UtilityClass.class);
+
+        when(UtilityClass.staticMethod(anyLong())).thenReturn(150);
+
+        assertEquals(150, systemUnderTest.methodCallingAStaticMethod());
+
+        //To verify a specific method call
+        //First : Call PowerMockito.verifyStatic()
+        //Second : Call the method to be verified
+        PowerMockito.verifyStatic();
+        UtilityClass.staticMethod(1 + 2 + 3);
+
+        // verify exact number of calls
+        //PowerMockito.verifyStatic(Mockito.times(1));
+
+    }
 }
