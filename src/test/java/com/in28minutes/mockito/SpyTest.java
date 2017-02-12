@@ -10,33 +10,51 @@ import static org.mockito.Mockito.*;
 
 public class SpyTest {
 
-    @Test
-    public void creatingASpyOnArrayList() {
-        List<String> listSpy = spy(ArrayList.class);
+  /**
+   * Note: For spy, the logic inside add function was executed where else for mock it was not
+   *
+   */
 
-        // Not able to perform this operations with a mock
-        listSpy.add("Ranga");
-        listSpy.add("in28Minutes");
+  @Test
+  public void creatingASpyOnArrayList() {
+    List<String> listSpy = spy(ArrayList.class);
 
-        verify(listSpy).add("Ranga");
-        verify(listSpy).add("in28Minutes");
+    // Not able to perform this operations with a mock
+    listSpy.add("Ranga");
+    listSpy.add("in28Minutes");
 
-        assertEquals(2, listSpy.size());
-        assertEquals("Ranga", listSpy.get(0));
-    }
+    verify(listSpy).add("Ranga");
+    verify(listSpy).add("in28Minutes");
 
-    @Test
-    public void creatingASpyOnArrayList_overridingSpecificMethods() {
-        List<String> listSpy = spy(ArrayList.class);
-        listSpy.add("Ranga");
-        listSpy.add("in28Minutes");
+    assertEquals(2, listSpy.size());
+    assertEquals("Ranga", listSpy.get(0));
+  }
 
-        stub(listSpy.size()).toReturn(-1);
+  @Test
+  public void check_mocklist_logic_evoked() {
+    String ELEMENT = "element";
 
-        assertEquals(-1, listSpy.size());
-        assertEquals("Ranga", listSpy.get(0));
+    List<String> listMock = mock(ArrayList.class);
+    assertEquals(0, listMock.size());
 
-        // @Spy Annotation
-    }
+    listMock.add(ELEMENT);
+    verify(listMock).add(ELEMENT);
+
+    assertEquals(0, listMock.size());
+  }
+
+  @Test
+  public void creatingASpyOnArrayList_overridingSpecificMethods() {
+    List<String> listSpy = spy(ArrayList.class);
+    listSpy.add("Ranga");
+    listSpy.add("in28Minutes");
+
+    stub(listSpy.size()).toReturn(-1);
+
+    assertEquals(-1, listSpy.size());
+    assertEquals("Ranga", listSpy.get(0));
+
+    // @Spy Annotation
+  }
 
 }
